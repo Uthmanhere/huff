@@ -1,4 +1,0 @@
-fscanf
-fseek
-ftell
-http://www.fundza.com/c4serious/fileIO_reading_all/
