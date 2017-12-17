@@ -2,7 +2,7 @@
 #define __ENC_H
 
 
-int * sample_freq(char *);
+int ** sample_freq(char *);
 //tree
 ////enc
 #endif 
