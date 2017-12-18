@@ -43,3 +43,17 @@ int ** sample_freq(char * sample)
 	return sample_ascii;
 }
 
+h_node tree_formation(int ** data)
+{
+	//allocating tree array
+	h_node ** huff_tree = (h_node **)calloc(ASCII_N - free_nodes, sizeof(h_node *));
+
+	//initializing them all
+	for (int count = 0; count < ASCII_N - free_nodes; ++count)
+	{
+		huff_tree[count]->character = data[free_nodes + count][0];
+		huff_tree[count]->frequency = data[free_nodes +count][1];
+	}
+
+	heapsort(huff_tree, ASCII_N - free_nodes);
+}
