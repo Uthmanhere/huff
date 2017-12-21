@@ -30,30 +30,10 @@ int ** sample_freq(char * sample)
 	for (long int counter = 0; sample[counter] != '\0'; ++counter)
 		++sample_ascii[sample[counter]][1];
 
-	//sorting by frequency
-	qsort(sample_ascii, ASCII_N, sizeof(sample_ascii[0]), cmp);
-
-	//counting free nodes
-	for(int count = 0; count < 128; ++count)
-	{
-		if (!sample_ascii[count][1])
-			++free_nodes;
-	}
-
 	return sample_ascii;
 }
 
 h_node tree_formation(int ** data)
 {
-	//allocating tree array
-	h_node ** huff_tree = (h_node **)calloc(ASCII_N - free_nodes, sizeof(h_node *));
 
-	//initializing them all
-	for (int count = 0; count < ASCII_N - free_nodes; ++count)
-	{
-		huff_tree[count]->character = data[free_nodes + count][0];
-		huff_tree[count]->frequency = data[free_nodes +count][1];
-	}
-
-	heapsort(huff_tree, ASCII_N - free_nodes);
 }
