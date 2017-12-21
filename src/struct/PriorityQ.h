@@ -3,16 +3,21 @@
 
 #include <stdbool.h>
 
-int ** pq_initiate();
-bool pq_empty(int **);
-void pq_insert(int * **, char, int);
-int pq_pop(int * **);
+#include "struct/HNode.c"
+
+bool pq_empty(h_node **);
+void pq_insert(h_node **, char, int);
+void pq_insertNode(h_node **, h_node *);
+h_node * pq_pop(h_node **);
+h_node * pq_peek(h_node **);
+int get_pq_size();
+
 
 int pq_parent(int);
 int pq_left(int);
 int pq_right(int);
 
-void pq_insert_order(int * **, int);
-void pq_pop_order(int * **, int);
-void pq_swap(int * **, int , int);
+void pq_insert_order(h_node **, int);
+void pq_pop_order(h_node **, int);
+void pq_swap(h_node **, int , int);
 #endif

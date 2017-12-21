@@ -35,5 +35,29 @@ int ** sample_freq(char * sample)
 
 h_node tree_formation(int ** data)
 {
+	h_node * huff = (h_node *)calloc(1, sizeof(h_node));
+	for (int count = 0; count < ASCII_N; ++count)
+	{
+		if (!data[count][1])
+			pq_insert(&huff, data[count][0], data[count][1]);
+	}
 
+	h_node * huff_alpha;
+	h_node * huff_beta;
+	h_node * huff_gamma;
+
+	while (get_pq_size() > 1)
+	{
+		huff_alpha = pq_pop(&huff);
+		huff_beta = pq_pop(&huff);
+
+		huff_gamma->left = huff_alpha;
+		huff_gamma->right = huff_beta;
+		huff_gamma->frequency = huff_alpha->frequency + huff_beta->frequency;
+		huff_gamma->character = '\0';
+
+		pq_insertNode(&huff, huff_gamma);
+	}
+	
+	return *huff;
 }

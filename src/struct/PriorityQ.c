@@ -3,85 +3,95 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+
 #define CHAR 0
 #define FREQ 1
 
 int pq_size = 0;
 
-int ** pq_initiate()
+bool pq_empty(h_node ** pq_this)
 {
-	return (int **)malloc(sizeof(int *));
+	return !&pq_this;
 }
-
-bool pq_empty(int ** pq_this)
+void pq_insertNode(h_node ** pq_this, h_node * huff_gamma)
 {
-	return !pq_this;
+	++pq_size;
+	if(!pq_size)
+	{
+		*pq_this = huff_gamma;
+	}
+	else
+	{
+		*pq_this = (h_node *)realloc(*pq_this, pq_size);
+		pq_this[pq_size - 1] = huff_gamma;
+		pq_insert_order(pq_this, pq_size - 1);
+	}
 }
-
-void pq_insert(int * ** pq_this, char character, int frequency)
+void pq_insert(h_node ** pq_this, char character, int frequency)
 {
 	
 	++pq_size; //increased size;
 
 	//memory inserstion
-	int ** tmp;
-	if (!pq_this)
+	h_node * tmp;
+	if (!pq_size)
 	{
 		//allocation
-		*pq_this = (int **)malloc(sizeof(int *));
-		*pq_this[0] = (int *)malloc(2 *sizeof(int));
+		*pq_this = (h_node *)malloc(sizeof(h_node));
 		//information
-		*pq_this[0][0] = character;
-		*pq_this[0][1] = frequency;
+		(*pq_this)->character = character;
+		(*pq_this)->frequency = frequency;
 	}
 	else
 	{
 		//reallocation
-		tmp = (int **)realloc(*pq_this, pq_size);
+		tmp = (h_node *)realloc(*pq_this, pq_size);
 		if (!tmp)	//memory error
 		{
 			puts("ERROR : OUT OF MEMORY !");
 			exit(1);
 		}
 		*pq_this = tmp;
-		//suballocation
-		*pq_this[pq_size - 1] = (int *)malloc(2* sizeof(int));
 		//information
-		*pq_this[pq_size - 1][CHAR] = character;
-		*pq_this[pq_size - 1][FREQ] = frequency;
+		pq_this[pq_size - 1]->character = character;
+		pq_this[pq_size - 1]->frequency = frequency;
 	}
 
 	pq_insert_order(pq_this, pq_size - 1);
 }
 
-int pq_pop(int * ** pq_this)
+h_node * pq_pop(h_node ** pq_this)
 {
-	int character = *pq_this[0][CHAR];
+	h_node * tmp = 0;
+
 	pq_swap(pq_this, 0, pq_size - 1);
-	free(*pq_this[pq_size - 1]);
-	free(*(pq_this + pq_size - 1));
+	pq_this[pq_size - 1] = 0;
 
 	pq_pop_order(pq_this, 0);
-	
+
+
+	return tmp;
 }
-void pq_insert_order(int * ** pq_this, int pos)
+
+
+void pq_insert_order(h_node ** pq_this, int pos)
 {
 	int * tmp;
-	if (*pq_this[pq_parent(pos)][FREQ] > *pq_this[pos][FREQ])
+	if (pq_this[pq_parent(pos)]->frequency > pq_this[pos]->frequency)
 	{
 		pq_swap(pq_this, pos, pq_parent(pos));
 		pq_insert_order(pq_this, pq_parent(pos));
 	}
 	else return;
 }
-void pq_pop_order(int * ** pq_this, int pos)
+void pq_pop_order(h_node ** pq_this, int pos)
 {
-	if (*pq_this[pos][FREQ] > *pq_this[pq_left(pos)][FREQ] && pq_left(pos) < pq_size)
+	if (pq_this[pos]->frequency > pq_this[pq_left(pos)]->frequency && pq_left(pos) < pq_size)
 	{
 		pq_swap(pq_this, pos, pq_left(pos));
 		pq_pop_order(pq_this, pq_left(pos));
 	}
-	if (*pq_this[pos][FREQ] > *pq_this[pq_right(pos)][FREQ] && pq_right(pos) < pq_size)
+	if (pq_this[pos]->frequency > pq_this[pq_right(pos)]->frequency && pq_right(pos) < pq_size)
 	{
 		pq_swap(pq_this, pos, pq_right(pos));
 		pq_pop_order(pq_this, pq_right(pos));
@@ -89,12 +99,17 @@ void pq_pop_order(int * ** pq_this, int pos)
 	else return;
 
 }
-void pq_swap(int * ** pq_this, int prior, int latter)
+void pq_swap(h_node ** pq_this, int prior, int latter)
 {
-	int ** tmp = 0;
+	h_node * tmp = 0;
 	tmp = *(pq_this + prior);
 	*(pq_this + prior) = *(pq_this + latter);
 	*(pq_this + latter) = tmp;
+}
+
+int get_pq_size()
+{
+	return pq_size;
 }
 
 int pq_parent(int child)
